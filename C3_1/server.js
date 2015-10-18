@@ -13,17 +13,10 @@ server.listen(5000);
 
 io = socketIO(server);
 
-var count = 0;
-
 io.on('connection', function (socket) {
-    count++;
-    io.emit('users.count', count);
-    
-    socket.on('disconnect', function () {
-        count--;
-        io.emit('users.count', count);
+    socket.on('message.send', function (data) {
+        io.emit('message.sent', data);
     });
-
-
-
 });
+//io......means send to all clients
+//socket....means send to individual
