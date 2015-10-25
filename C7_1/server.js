@@ -23,10 +23,22 @@ io.on('connection',function(socket){
         console.log('loading');
     });
 
-    readStream.on('data',function(chunk){
+    //readStream.on('data',function(chunk){
+    //    chunks.push(chunk);
+    //    socket.emit('img-chunk',chunk);
+    //});
+    //reading with delay
+    readStream.on('data', function (chunk) {
         chunks.push(chunk);
-        socket.emit('img-chunk',chunk);
+        delay = delay + 1000;
+        setTimeout(function () {
+            socket.emit('img-chunk', chunk);
+        }, delay);
     });
+
+
+
+
 
     readStream.on('end',function(){
         console.log('end');
