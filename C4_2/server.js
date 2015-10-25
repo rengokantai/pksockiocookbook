@@ -11,14 +11,12 @@ app.get('/', function (req, res) {
 server = http.Server(app);
 server.listen(5000);
 
-
 io = socketIO(server);
 
 io.on('connection', function (socket) {
-    io.emit('user.add', socket.id);
-    socket.on('disconnect', function () {
-        io.emit('user.remove', socket.id)
+    socket.emit('room.joined', socket.id + ' joined the hallway');
+    socket.on('room.join', function (room) {
+        socket.join(room);
+        io.to(room).emit('room.joined', socket.id + ' joined the ' + room);
     });
 });
-
-//issue: not synchornized

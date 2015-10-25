@@ -11,14 +11,17 @@ app.get('/', function (req, res) {
 server = http.Server(app);
 server.listen(5000);
 
-
 io = socketIO(server);
 
-io.on('connection', function (socket) {
-    io.emit('user.add', socket.id);
-    socket.on('disconnect', function () {
-        io.emit('user.remove', socket.id)
+function createNamespace (i) {
+    var group = io.of('/group-' + i);
+    group.on('connection', function(socket) {
+        socket.on('message.send', function (data) {
+            group.emit('message.sent', data);
+        });
     });
-});
+}
 
-//issue: not synchornized
+for (var i = 0; i < 2; i++) {
+    createNamespace(i);
+}
